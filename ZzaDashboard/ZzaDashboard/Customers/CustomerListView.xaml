@@ -1,0 +1,76 @@
+﻿<UserControl x:Class="ZzaDashboard.Customers.CustomerListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             xmlns:customers="clr-namespace:ZzaDashboard.Customers"
+             xmlns:local="clr-namespace:ZzaDashboard"
+             xmlns:data="clr-namespace:Zza.Data;assembly=Zza.Data"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             local:ViewModelLocator.AutoWiredViewModel="True">
+
+    <!--local:MvvmBehaviors.LoadedMethodName="LoadCustomers"-->
+    <!--xmlns:local="clr-namespace:ZzaDashboard.Customers"-->
+    <!--<UserControl.DataContext>
+        <customers:CustomerListViewModel/>
+    </UserControl.DataContext>-->
+
+    <UserControl.Resources>
+        <!--<DataTemplate x:Key="CustomerTemplate">-->
+        <DataTemplate DataType="{x:Type data:Customer}">
+            <StackPanel>
+                <TextBlock Text="{Binding FirstName}"/>
+                <TextBlock Text="{Binding LastName}"/>
+                <TextBlock Text="{Binding Phone}"/>
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <ei:CallMethodAction TargetObject="{Binding}" MethodName="LoadCustomers"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <Button Grid.Row="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                Content="Delete"
+                Width="100"
+                Command="{Binding DeleteCommand}"/>
+
+        <DataGrid x:Name="dgCustomers"
+                  AutoGenerateColumns="False"
+                  EnableRowVirtualization="True"
+                  ItemsSource="{Binding Customers}"
+                  SelectedItem="{Binding SelectedCustomer}"
+                  RowDetailsVisibilityMode="VisibleWhenSelected"
+                  Grid.Row="1">
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="colFirstName"
+                                    Binding="{Binding FirstName}"
+                                    Header="First Name"/>
+                <DataGridTextColumn x:Name="colLastName"
+                                    Binding="{Binding LastName}"
+                                    Header="Last Name"/>
+                <DataGridTextColumn x:Name="colPhone"
+                                    Binding="{Binding Phone}"
+                                    Header="Phone"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <ListBox Grid.Row="2"
+                 ItemsSource="{Binding Customers}"/>
+        <!-- ItemTemplate="{StaticResource CustomerTemplate}"-->
+    </Grid>
+</UserControl>
